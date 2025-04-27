@@ -61,74 +61,84 @@ function App() {
   };
 
   return (
-    <div className="p-6 max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Movie Search</h1>
-      <div className="flex gap-2 mb-4">
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              handleSearch();
-            }
-          }}
-          className="border border-gray-300 rounded px-2 py-1 flex-grow"
-          placeholder="Search for a movie..."
-        />
-        <button
-          onClick={handleSearch}
-          className="bg-blue-500 text-white rounded px-4 py-1"
-        >
-          Search
-        </button>
-      </div>
-      {isLoading && (
-        <div className="flex justify-center my-8">
-          <div
-            className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"
-            aria-label="Loading..."
-          />
-        </div>
-      )}
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-      {!isLoading && !error && movies.length === 0 && (
-        <p className="text-center text-gray-500 mb-4">No movies found</p>
-      )}
+    <div className="min-h-screen bg-gray-900 p-6">
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-4xl font-bold text-center mb-8 text-white">
+          🎬 Movie Search
+        </h1>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-        {movies.map((movie) => (
-          <div
-            key={movie.id}
-            onClick={() => handleMovieClick(movie.id)}
-            className="bg-white rounded shadow p-2 cursor-pointer hover:shadow-lg transition-shadow"
+        <div className="flex gap-2 mb-6">
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleSearch();
+            }}
+            className="bg-gray-800 border border-gray-700 rounded px-4 py-2 flex-grow text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
+            placeholder="Search for a movie..."
+          />
+          <button
+            onClick={handleSearch}
+            className="bg-orange-500 hover:bg-orange-600 text-white rounded px-6 py-2 transition"
           >
-            {movie.poster_path ? (
-              <img
-                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                alt={movie.title}
-                className="w-full h-auto rounded"
-              />
-            ) : (
-              <div className="w-full h-[300px] bg-gray-200 flex items-center justify-center text-gray-500 text-sm rounded">
-                No image
-              </div>
-            )}
-            <h2 className="font-semibold text-sm mt-2">{movie.title}</h2>
-            <p className="text-gray-500 text-xs">{movie.release_date}</p>
-            <p className="text-xs text-yellow-600">* {movie.vote_average}</p>
+            Search
+          </button>
+        </div>
+
+        {isLoading && (
+          <div className="flex justify-center my-8">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500" />
           </div>
-        ))}
-      </div>
-      {selectedMovie && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
+        )}
+
+        {error && <p className="text-orange-400 text-center mb-4">{error}</p>}
+
+        {!isLoading && !error && movies.length === 0 && (
+          <p className="text-center text-gray-400 mb-4">No movies found</p>
+        )}
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+          {movies.map((movie) => (
+            <div
+              key={movie.id}
+              onClick={() => handleMovieClick(movie.id)}
+              className="bg-gray-800 rounded-xl overflow-hidden cursor-pointer hover:bg-gray-700 transition"
+            >
+              {movie.poster_path ? (
+                <img
+                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                  alt={movie.title}
+                  className="w-full h-72 object-cover"
+                />
+              ) : (
+                <div className="w-full h-72 bg-gray-700 flex items-center justify-center text-gray-400 text-sm">
+                  No Image
+                </div>
+              )}
+              <div className="p-4">
+                <h2 className="font-semibold text-base text-white">
+                  {movie.title}
+                </h2>
+                <p className="text-gray-400 text-xs">{movie.release_date}</p>
+                <p className="text-xs text-orange-400 mt-1">
+                  ★ {movie.vote_average}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {selectedMovie && (
+          <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50">
+            <div className="bg-gray-800 rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-6">
               <div className="flex justify-between items-start mb-4">
-                <h2 className="text-2xl font-bold">{selectedMovie.title}</h2>
+                <h2 className="text-3xl font-bold text-white">
+                  {selectedMovie.title}
+                </h2>
                 <button
                   onClick={() => setSelectedMovie(null)}
-                  className="text-gray-500 hover:text-gray-700"
+                  className="text-gray-400 hover:text-orange-400 text-2xl"
                 >
                   ✕
                 </button>
@@ -139,48 +149,50 @@ function App() {
                   <img
                     src={`https://image.tmdb.org/t/p/w500${selectedMovie.poster_path}`}
                     alt={selectedMovie.title}
-                    className="w-full md:w-1/3 h-auto rounded"
+                    className="w-full md:w-1/3 h-auto rounded-lg"
                   />
                 )}
-
-                <div className="flex-1">
-                  <p className="text-gray-700 mb-2">
-                    <span className="font-semibold">Release Date:</span>{" "}
+                <div className="flex-1 text-gray-300">
+                  <p className="mb-2">
+                    <span className="font-semibold text-white">
+                      Release Date:
+                    </span>{" "}
                     {selectedMovie.release_date}
                   </p>
-                  <p className="text-gray-700 mb-2">
-                    <span className="font-semibold">Rating:</span>{" "}
+                  <p className="mb-2">
+                    <span className="font-semibold text-white">Rating:</span>{" "}
                     {selectedMovie.vote_average}/10
                   </p>
-                  <p className="text-gray-700 mb-4">
-                    <span className="font-semibold">Runtime:</span>{" "}
+                  <p className="mb-4">
+                    <span className="font-semibold text-white">Runtime:</span>{" "}
                     {selectedMovie.runtime} minutes
                   </p>
-                  <p className="text-gray-700">{selectedMovie.overview}</p>
+                  <p>{selectedMovie.overview}</p>
                 </div>
               </div>
             </div>
           </div>
+        )}
+
+        <div className="flex justify-center gap-4 mt-10">
+          <button
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page === 1}
+            className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded disabled:bg-gray-700 disabled:cursor-not-allowed transition"
+          >
+            Previous
+          </button>
+          <span className="px-4 py-2 self-center text-gray-300">
+            Page {page} of {totalPages}
+          </span>
+          <button
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+            className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded disabled:bg-gray-700 disabled:cursor-not-allowed transition"
+          >
+            Next
+          </button>
         </div>
-      )}
-      <div className="flex justify-center gap-4 mt-6">
-        <button
-          onClick={() => setPage((p) => Math.max(1, p - 1))}
-          disabled={page === 1}
-          className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-300"
-        >
-          Previous
-        </button>
-        <span className="px-4 py-2 self-center">
-          Page {page} of {totalPages}
-        </span>
-        <button
-          onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-          disabled={page === totalPages}
-          className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-300"
-        >
-          Next
-        </button>
       </div>
     </div>
   );
