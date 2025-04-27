@@ -15,8 +15,10 @@ export const searchMovies = async (query: string) => {
   return res.json();
 };
 
-export const fetchPopularMovies = async () => {
-  const res = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}`);
+export const fetchPopularMovies = async (page: number = 1) => {
+  const res = await fetch(
+    `${BASE_URL}/movie/popular?api_key=${API_KEY}&page=${page}`
+  );
   console.log("popular fetch status : ", res.status);
   if (!res.ok) throw new Error("Failed to fetch popular movies");
   return res.json();

@@ -14,24 +14,25 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [selectedMovie, setSelectedMovie] = useState<any | null>(null);
   const [movieDetails, setMovieDetails] = useState<any | null>(null);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     const loadPopular = async () => {
       setIsLoading(true);
       setError(null);
       try {
-        const data = await fetchPopularMovies();
+        const data = await fetchPopularMovies(page);
         setMovies(data.results);
-        console.log("popular movies : ", data);
+        setTotalPages(data.total_pages);
       } catch (err) {
         setError("Failed to fetch popular movies");
-        console.error("Error fetching popular movies:", err);
       } finally {
         setIsLoading(false);
       }
     };
     loadPopular();
-  }, []);
+  }, [page]);
 
   const handleSearch = async () => {
     setIsLoading(true);
@@ -83,7 +84,12 @@ function App() {
         </button>
       </div>
       {isLoading && (
-        <p className="text-center text-blue-500 mb-4">Loading...</p>
+        <div className="flex justify-center my-8">
+          <div
+            className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"
+            aria-label="Loading..."
+          />
+        </div>
       )}
       {error && <p className="text-red-500 mb-4">{error}</p>}
       {!isLoading && !error && movies.length === 0 && (
@@ -157,6 +163,25 @@ function App() {
           </div>
         </div>
       )}
+      <div className="flex justify-center gap-4 mt-6">
+        <button
+          onClick={() => setPage((p) => Math.max(1, p - 1))}
+          disabled={page === 1}
+          className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-300"
+        >
+          Previous
+        </button>
+        <span className="px-4 py-2 self-center">
+          Page {page} of {totalPages}
+        </span>
+        <button
+          onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+          disabled={page === totalPages}
+          className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-300"
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 }
